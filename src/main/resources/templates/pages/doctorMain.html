@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title>Doctor Dashboard</title>
+    <!-- Підключення Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+
+</head>
+<body class="bg-light">
+
+<div class="container mt-5">
+
+    <!-- Меню з посиланнями -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Doctor Dashboard</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#homeSection">Головна</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#aboutYouSection">Про вас</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#patientsSection">Мої пацієнти</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#schedule">Графік роботи</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/doctors/logout">Вийти</a>
+                    </li>
+                    <!-- Додайте інші посилання за потреби -->
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- Заголовок сторінки -->
+    <div id="homeSection" class="row">
+        <div class="col-md-12">
+            <h1 class="display-4">Ласкаво просимо!</h1>
+        </div>
+    </div>
+
+    <!-- Відображення та редагування інформації про лікаря -->
+    <div id="aboutYouSection" class="row">
+        <div class="col-md-6">
+            <h2>Інформація про Вас</h2>
+            <form th:action="@{'/doctors/edit/' + ${currentDoctor.doctorId}}" method="post" th:object="${currentDoctor}">
+                <div class="mb-3">
+                    <label for="userId" class="form-label">User ID</label>
+                    <input type="text" class="form-control" id="userId" th:value="${currentDoctor.user.userId}" readonly>
+                </div>
+                <div class="mb-3">
+                    <label for="firstName" class="form-label">Ім'я</label>
+                    <input type="text" class="form-control" id="firstName" th:value="${currentDoctor.firstName}" th:field="*{firstName}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="lastName" class="form-label">Прізвище</label>
+                    <input type="text" class="form-control" id="lastName" th:value="${currentDoctor.lastName}" th:field="*{lastName}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="specialty" class="form-label">Спеціальність</label>
+                    <input type="text" class="form-control" id="specialty" th:value="${currentDoctor.specialty}" th:field="*{specialty}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="contactNumber" class="form-label">Номер телефону</label>
+                    <input type="text" class="form-control" id="contactNumber" th:value="${currentDoctor.contactNumber}" th:field="*{contactNumber}">
+                </div>
+                <div class="mb-3">
+                    <label for="hireDate" class="form-label">Дата найму</label>
+                    <input type="date" class="form-control" id="hireDate" th:value="${#dates.format(currentDoctor.doctorHireDate, 'yyyy-MM-dd')}" th:field="*{doctorHireDate}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="salary" class="form-label">Заробітна плата</label>
+                    <input type="text" class="form-control" id="salary" th:value="${currentDoctor.salary}" th:field="*{salary}">
+                </div>
+<!--
+                <div class="mb-3">
+                    <label for="department" class="form-label">Відділення</label>
+                    <select class="form-select" id="department" name="department.id">
+                        <option value="" th:selected="${currentDoctor?.department == null}">Відсутнє відділення</option>
+                        <option th:each="dept : ${departments}" th:value="${dept.departmentId}" th:text="${dept.departmentName}" th:selected="${currentDoctor?.department?.departmentId == dept.departmentId}"></option>
+                    </select>
+                </div>
+-->
+                <button type="submit" class="btn btn-primary">Зберегти зміни</button>
+
+            </form>
+        </div>
+    </div>
+    <!-- Відображення  інформації про пацієнтів  -->
+    <div id="patientsSection" class="row">
+        <div class="col-md-6">
+            <h2>Мої пацієнти</h2>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Ім'я</th>
+                    <th>Прізвище</th>
+                    <th>Дата народження</th>
+                    <th>Контактний номер</th>
+                    <th>Email</th>
+                    <th>Адреса</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Використовуйте Thymeleaf для ітерації по списку пацієнтів -->
+                <tr th:each="appointmentSchedule, status : ${appointmentSchedules}" th:if="${status.index < 5}">
+                    <td th:text="${appointmentSchedule.patient.firstName}"></td>
+                    <td th:text="${appointmentSchedule.patient.lastName}"></td>
+                    <td th:text="${#dates.format(appointmentSchedule.patient.patientDateOfBirth, 'yyyy-MM-dd')}"></td>
+                    <td th:text="${appointmentSchedule.patient.contactNumber}"></td>
+                    <td th:text="${appointmentSchedule.patient.email}"></td>
+                    <td th:text="${appointmentSchedule.patient.contactAddress}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- Блок графіку роботи-->
+    <div id="schedule" class="row">
+        <div class="col-md-6">
+            <h2>Графік роботи</h2>
+            <form th:action="@{/doctors/saveSchedule}" th:object="${editedSchedule}" method="post" id="scheduleForm">
+                <table class="table" id="scheduleTable">
+                    <thead>
+                    <tr>
+                        <th>День тижня</th>
+                        <th>Початок робочого часу</th>
+                        <th>Кінець робочого часу</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- Використовуйте Thymeleaf для ітерації по графіку роботи лікаря -->
+                    <tr th:each="schedule, status : ${doctorSchedules}">
+                        <td>
+                            <!-- Перевірка на null перед використанням equals() -->
+                            <span th:if="${schedule.dayOfWeek != null}" th:text="${schedule.dayOfWeek}"></span>
+                        </td>
+                        <td><input type="time" class="form-control" th:value="${#dates.format(schedule.startTime, 'HH:mm')}" th:name="doctorSchedules[__${status.index}__].startTime" required></td>
+                        <td><input type="time" class="form-control" th:value="${#dates.format(schedule.endTime, 'HH:mm')}" th:name="doctorSchedules[__${status.index}__].endTime" required></td>
+                        <td><button type="button" class="btn btn-danger" onclick="removeScheduleRow(this, '${schedule.id}')">Видалити</button></td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <button type="button" class="btn btn-primary" onclick="addScheduleRow()">Додати рядок</button>
+                <button type="submit" class="btn btn-success">Зберегти зміни</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- Підключення Bootstrap JS та Popper.js -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script th:inline="javascript">
+    /* <![CDATA[ */
+    function addScheduleRow() {
+        var newRow = '<tr>' +
+            '<td><select class="form-select" name="newDayOfWeek" required>' +
+            '<option value="Monday">Понеділок</option>' +
+            '<option value="Tuesday">Вівторок</option>' +
+            '<option value="Wednesday">Середа</option>' +
+            '<option value="Thursday">Четвер</option>' +
+            '<option value="Friday">П\'ятниця</option>' +
+            '</select></td>' +
+            '<td><input type="time" class="form-control" name="newStartTime" required></td>' +
+            '<td><input type="time" class="form-control" name="newEndTime" required></td>' +
+            '<td><button type="button" class="btn btn-danger" onclick="removeScheduleRow(this)">Видалити</button></td>' +
+            '</tr>';
+
+        $('#scheduleTable tbody').append(newRow);
+    }
+
+    function removeScheduleRow(button, scheduleId) {
+        if (scheduleId) {
+            // Викликати функцію для видалення розкладу з бази даних за його ідентифікатором
+            $.ajax({
+                type: 'POST', // або 'GET', залежно від вашої конфігурації
+                url: '/doctors/deleteSchedule/' + scheduleId,
+                success: function(response) {
+                    console.log('Розклад видалено успішно');
+                    // Видалити рядок після успішного видалення розкладу
+                    $(button).closest('tr').remove();
+                },
+                error: function(error) {
+                    console.error('Помилка при видаленні розкладу:', error);
+                }
+            });
+        } else {
+            // Якщо ідентифікатор розкладу відсутній, просто видалити рядок
+            $(button).closest('tr').remove();
+        }
+    }
+   function saveChanges() {
+        // Отримати дані з форми
+        var formData = $('#scheduleForm').serialize();
+
+        // Виконати AJAX-запит для відправки даних на сервер
+        $.ajax({
+            type: 'POST',
+            url: '/doctors/saveSchedule',
+            data: formData,
+            success: function(response) {
+                // Обробка успішного відгуку від сервера, якщо потрібно
+                console.log('Зміни збережено успішно');
+                // Після збереження можна оновити або перезавантажити сторінку
+                // Наприклад, location.reload();
+            },
+            error: function(error) {
+                // Обробка помилок, якщо вони виникнуть під час відправлення запиту
+                console.error('Помилка при збереженні змін:', error);
+            }
+        });
+    }
+    /* ]]> */
+</script>
+
+</body>
+</html>

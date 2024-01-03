@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Page</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.0/css/bootstrap.min.css}">
+    <!-- Додайте інші стилі чи скрипти, які вам потрібні -->
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .registration-container {
+            max-width: 600px;
+            margin: auto;
+            margin-top: 50px;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .registration-form {
+            margin-top: 20px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<div class="container registration-container">
+    <h2 class="text-center mb-4">РЕЄСТРАЦІЯ</h2>
+    <form th:action="@{/auth/register}" method="post" class="registration-form">
+
+
+        <!-- Додайте блок для вводу даних користувача -->
+        <div class="mb-3">
+            <label for="userName" class="form-label">Username</label>
+            <input type="text" class="form-control" id="userName" name="userName" required>
+        </div>
+        <div class="mb-3">
+            <label for="userPassword" class="form-label">Password</label>
+            <input type="password" class="form-control" id="userPassword" name="userPassword" required>
+        </div>
+
+        <!--  блок для вибору типу користувача -->
+        <div class="mb-3">
+            <label for="userType" class="form-label">User Type</label>
+            <select class="form-select" id="userType" name="userType" required>
+                <option value="patient">Пацієнт</option>
+                <option value="doctor">Лікар</option>
+                <option value="administrator">Адміністратор</option>
+            </select>
+        </div>
+
+
+        <div id="doctorFields" class="mb-3" style="display: none;">
+            <label for="firstName" class="form-label">Doctor First Name</label>
+            <input type="text" class="form-control" id="firstName" name="firstName">
+
+            <label for="lastName" class="form-label">Doctor Last Name</label>
+            <input type="text" class="form-control" id="lastName" name="lastName">
+
+            <label for="specialty" class="form-label">Doctor Specialty</label>
+            <input type="text" class="form-control" id="specialty" name="specialty">
+
+            <label for="contactNumber" class="form-label">Doctor Contact Number</label>
+            <input type="text" class="form-control" id="contactNumber" name="contactNumber">
+
+            <label for="doctorHireDate" class="form-label">Doctor Hire Date</label>
+            <input type="date" class="form-control" id="doctorHireDate" th:field="*{doctorModel.doctorHireDate}" name="doctorHireDate">
+
+            <label for="salary" class="form-label">Doctor Salary(грн)</label>
+            <input type="text" class="form-control" id="salary" name="salary">
+        </div>
+
+        <!-- блок для введення даних адміністратора -->
+        <div id="administratorFields" class="mb-3" style="display: none;">
+            <label for="adminFirstName" class="form-label">Administrator First Name</label>
+            <input type="text" class="form-control" id="adminFirstName" name="firstName">
+
+            <label for="adminLastName" class="form-label">Administrator Last Name</label>
+            <input type="text" class="form-control" id="adminLastName" name="lastName">
+
+            <label for="adminContactNumber" class="form-label">Administrator Contact Number</label>
+            <input type="text" class="form-control" id="adminContactNumber" name="contactNumber">
+
+            <label for="adminEmail" class="form-label">Administrator Email</label>
+            <input type="email" class="form-control" id="adminEmail" name="email">
+
+            <label for="adminHireDate" class="form-label">Doctor Hire Date</label>
+            <input type="date" class="form-control" id="adminHireDate" th:field="*{administratorModel.adminHireDate}" name="adminHireDate">
+
+            <label for="adminSalary" class="form-label">Administrator Salary</label>
+            <input type="text" class="form-control" id="adminSalary" name="salary">
+        </div>
+        <!-- блок для введення даних пацієнта -->
+        <div id="patientFields" class="mb-3" style="display: none;">
+            <label for="patientFirstName" class="form-label">Patient First Name</label>
+            <input type="text" class="form-control" id="patientFirstName" name="firstName">
+
+            <label for="patientLastName" class="form-label">Patient Last Name</label>
+            <input type="text" class="form-control" id="patientLastName" name="lastName">
+
+            <label for="patientDateOfBirth" class="form-label">Patient Date of Birth(year-month-day)</label>
+            <input type="date" class="form-control" id="patientDateOfBirth" th:field="*{patientModel.patientDateOfBirth}" name="patientDateOfBirth">
+
+            <label for="gender" class="form-label">Patient Gender</label>
+            <select class="form-select" id="gender" name="gender" required>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+            </select>
+
+            <label for="patientContactNumber" class="form-label">Patient Contact Number</label>
+            <input type="text" class="form-control" id="patientContactNumber" name="contactNumber">
+
+            <label for="patientEmail" class="form-label">Patient Email</label>
+            <input type="email" class="form-control" id="patientEmail" name="email">
+
+            <label for="contactAddress" class="form-label">Patient Contact Address</label>
+            <textarea class="form-control" id="contactAddress" name="contactAddress"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Register</button>
+    </form>
+</div>
+
+<!-- Скрипти Bootstrap та інші -->
+<script th:src="@{/webjars/jquery/3.6.0/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/5.3.0/js/bootstrap.min.js}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Викликати функцію при завантаженні сторінки
+        showFieldsBasedOnUserType();
+
+        document.getElementById('userType').addEventListener('change', function () {
+            showFieldsBasedOnUserType();
+        });
+
+        // Функція для відображення/приховування полів в залежності від вибору типу користувача
+        function showFieldsBasedOnUserType() {
+            var userType = document.getElementById('userType').value;
+
+            // Приховати всі блоки
+            document.getElementById('doctorFields').style.display = 'none';
+            document.getElementById('administratorFields').style.display = 'none';
+            document.getElementById('patientFields').style.display = 'none';
+
+            // Відобразити блок в залежності від вибору типу користувача
+            if (userType === 'patient') {
+                document.getElementById('patientFields').style.display = 'block';
+            } else if (userType === 'doctor') {
+                document.getElementById('doctorFields').style.display = 'block';
+            } else if (userType === 'administrator') {
+                document.getElementById('administratorFields').style.display = 'block';
+            }
+        }
+    });
+</script>
+</body>
+</html>
+
