@@ -8,7 +8,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/patients")
@@ -35,7 +38,8 @@ public class PatientController {
         User user = (User) session.getAttribute("user");
         // Отримуємо пацієнта за користувачем
         Patient patient = patientService.getPatientByUser(user);
-
+        List<Doctor> doctors = doctorsService.getAllDoctors();
+        model.addAttribute("doctors", doctors);
         // Додаємо об'єкт пацієнта до моделі
         model.addAttribute("patient", patient);
         return "pages/patientMain";
@@ -144,6 +148,35 @@ public class PatientController {
     public String logout(HttpSession session) {
         session.invalidate(); // Завершення сесії
         return "redirect:/auth/login"; // Перенаправлення на сторінку входу
+    }
+    @PostMapping("/bookAppointment")
+    public String bookAppointment(@RequestParam int doctorId, @RequestParam String appointmentDateTime, HttpSession session) {
+        // Отримуємо користувача з сесії
+        User user = (User) session.getAttribute("user");
+
+        // Отримуємо пацієнта за користувачем
+        Patient patient = patientService.getPatientByUser(user);
+
+        // Отримуємо об'єкт лікаря за його ідентифікатором
+        Doctor doctor = doctorsService.getDoctorById(doctorId).orElseThrow(() -> new RuntimeException("Лікар не знайдений"));
+
+        // Тут ви можете додати логіку для перевірки доступності дати та часу прийому лікаря
+
+        // Створення об'єкту запису на прийом
+        AppointmentSchedule appointmentSchedule = new AppointmentSchedule();
+        appointmentSchedule.setPatient(patient);
+        appointmentSchedule.setDoctor(doctor);
+
+        // Парсинг та встановлення дати та часу прийому
+        LocalDateTime appointmentDateTimeParsed = LocalDateTime.parse(appointmentDateTime, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm"));
+        appointmentSchedule.setAppointmentDate(java.sql.Date.valueOf(appointmentDateTimeParsed.toLocalDate()));
+        appointmentSchedule.setAppointmentTime(java.sql.Time.valueOf(appointmentDateTimeParsed.toLocalTime()));
+        // Встановлення значення для statusSchedule
+        appointmentSchedule.setStatusSchedule("Scheduled");
+        // Збереження запису на прийом
+        appointmentScheduleService.saveAppointment(appointmentSchedule);
+
+        return "redirect:/patients/main";
     }
 
 }

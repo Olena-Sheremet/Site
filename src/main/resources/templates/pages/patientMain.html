@@ -93,8 +93,31 @@
         <button type="submit" class="btn btn-primary">Зберегти зміни</button>
     </form>
 </div>
+<!--Блок запису на прийом-->
 
-
+<div id="appointments" class="container mb-4">
+    <h2>Запис на прийом</h2>
+    <form th:action="@{/patients/bookAppointment}" method="post">
+        <!-- Вибір лікаря -->
+        <div class="mb-3">
+            <label for="doctorId" class="form-label">Виберіть лікаря</label>
+            <select class="form-control" id="doctorId" name="doctorId">
+                <!-- Виведення імені та прізвища лікарів та їх спеціальності -->
+                <option th:each="doctor : ${doctors}" th:value="${doctor.doctorId}">
+                    <!-- Виведення інформації про лікаря -->
+                    <span th:text="${doctor.lastName + ' ' + doctor.firstName + ' - ' + doctor.specialty}"></span>
+                </option>
+            </select>
+        </div>
+        <!-- Вибір дати та часу прийому -->
+        <div class="mb-3">
+            <label for="appointmentDateTime" class="form-label">Оберіть дату та час прийому</label>
+            <input type="datetime-local" class="form-control" id="appointmentDateTime" name="appointmentDateTime" required />
+        </div>
+        <!-- Кнопка для збереження запису на прийом -->
+        <button type="submit" class="btn btn-primary">Записатися на прийом</button>
+    </form>
+</div>
 
 
 
