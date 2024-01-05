@@ -93,8 +93,38 @@
         <button type="submit" class="btn btn-primary">Зберегти зміни</button>
     </form>
 </div>
-<!--Блок запису на прийом-->
+<!-- Блок відображення записів на прийом -->
+<div id="scheduledAppointments" class="container mb-4">
+    <h2>Мій графік</h2>
+    <!-- Перевірка чи є записи на прийом -->
+    <th:block th:if="${scheduledAppointments.size() > 0}">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Дата</th>
+                <th>Час</th>
+                <th>Статус</th>
+                <th>Лікар</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Перебір записів на прийом та їх відображення -->
+            <tr th:each="appointment : ${scheduledAppointments}">
+                <td th:text="${#dates.format(appointment.appointmentDate, 'dd-MM-yyyy')}"></td>
+                <td th:text="${#dates.format(appointment.appointmentTime, 'HH:mm')}"></td>
+                <td th:text="${appointment.statusSchedule}"></td>
+                <td th:text="${appointment.doctor.lastName + ' ' + appointment.doctor.firstName + ' (' + appointment.doctor.specialty + ')'}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </th:block>
+    <!-- Відображення повідомлення, якщо немає записів -->
+    <th:block th:unless="${scheduledAppointments.size() > 0}">
+        <p>На жаль, немає записів на прийом.</p>
+    </th:block>
+</div>
 
+<!--Блок запису на прийом-->
 <div id="appointments" class="container mb-4">
     <h2>Запис на прийом</h2>
     <form th:action="@{/patients/bookAppointment}" method="post">

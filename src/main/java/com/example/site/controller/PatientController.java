@@ -38,8 +38,15 @@ public class PatientController {
         User user = (User) session.getAttribute("user");
         // Отримуємо пацієнта за користувачем
         Patient patient = patientService.getPatientByUser(user);
+        // Отримуємо список лікарів
         List<Doctor> doctors = doctorsService.getAllDoctors();
+        // Додаємо список лікарів до моделі
         model.addAttribute("doctors", doctors);
+        // Отримуємо заплановані прийоми для пацієнта
+        List<AppointmentSchedule> scheduledAppointments = appointmentScheduleService.getScheduledAppointmentsForPatient(patient);
+        // Додаємо список запланованих прийомів до моделі
+        model.addAttribute("scheduledAppointments", scheduledAppointments);
+
         // Додаємо об'єкт пацієнта до моделі
         model.addAttribute("patient", patient);
         return "pages/patientMain";
@@ -159,8 +166,6 @@ public class PatientController {
 
         // Отримуємо об'єкт лікаря за його ідентифікатором
         Doctor doctor = doctorsService.getDoctorById(doctorId).orElseThrow(() -> new RuntimeException("Лікар не знайдений"));
-
-        // Тут ви можете додати логіку для перевірки доступності дати та часу прийому лікаря
 
         // Створення об'єкту запису на прийом
         AppointmentSchedule appointmentSchedule = new AppointmentSchedule();
