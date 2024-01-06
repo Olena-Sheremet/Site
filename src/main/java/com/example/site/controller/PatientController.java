@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/patients")
@@ -20,14 +19,15 @@ public class PatientController {
     private final PatientsService patientService;
     private final AppointmentScheduleService appointmentScheduleService;
     private final DoctorsService doctorsService;
-    private DoctorScheduleService doctorScheduleService;
-
+    private final DoctorScheduleService doctorScheduleService;
+    private final PrescriptionService prescriptionService;
     @Autowired
-    public PatientController(PatientsService patientService, AppointmentScheduleService appointmentScheduleService, DoctorsService doctorsService, DoctorScheduleService doctorScheduleService) {
+    public PatientController(PatientsService patientService, AppointmentScheduleService appointmentScheduleService, DoctorsService doctorsService, DoctorScheduleService doctorScheduleService, PrescriptionService prescriptionService) {
         this.patientService = patientService;
         this.appointmentScheduleService = appointmentScheduleService;
         this.doctorsService = doctorsService;
         this.doctorScheduleService = doctorScheduleService;
+        this.prescriptionService = prescriptionService;
     }
 
 
@@ -40,12 +40,14 @@ public class PatientController {
         Patient patient = patientService.getPatientByUser(user);
         // Отримуємо список лікарів
         List<Doctor> doctors = doctorsService.getAllDoctors();
-        // Додаємо список лікарів до моделі
         model.addAttribute("doctors", doctors);
         // Отримуємо заплановані прийоми для пацієнта
         List<AppointmentSchedule> scheduledAppointments = appointmentScheduleService.getScheduledAppointmentsForPatient(patient);
-        // Додаємо список запланованих прийомів до моделі
         model.addAttribute("scheduledAppointments", scheduledAppointments);
+        // Отримуємо рецепти для пацієнта
+        List<Prescription> prescriptions = prescriptionService.getByPatient(patient);
+        model.addAttribute("prescriptions", prescriptions);
+
 
         // Додаємо об'єкт пацієнта до моделі
         model.addAttribute("patient", patient);

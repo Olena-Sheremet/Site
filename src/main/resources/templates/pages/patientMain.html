@@ -126,7 +126,7 @@
 
 <!--Блок запису на прийом-->
 <div id="appointments" class="container mb-4">
-    <h2>Запис на прийом</h2>
+    <h2>Записатися на прийом</h2>
     <form th:action="@{/patients/bookAppointment}" method="post">
         <!-- Вибір лікаря -->
         <div class="mb-3">
@@ -148,7 +148,31 @@
         <button type="submit" class="btn btn-primary">Записатися на прийом</button>
     </form>
 </div>
-
+<!-- Блок відображення рецептів -->
+<div id="prescriptions" class="container mb-4">
+    <h2>Мої Рецепти</h2>
+    <!-- Перевірка, чи є рецепти -->
+    <th:block th:if="${prescriptions.size() > 0}">
+        <!-- Цикл для відображення рецептів -->
+        <div th:each="prescription : ${prescriptions}">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <!-- Інформація про рецепт -->
+                    <h5 class="card-title">Рецепт </h5>
+                    <p class="card-text">Дата назначення: <span th:text="${prescription.prescriptionDate}"></span></p>
+                    <p class="card-text">Лікар: <span th:text="${prescription.doctor.firstName + ' ' + prescription.doctor.lastName + ', ' + prescription.doctor.specialty}"></span></p>
+                    <p class="card-text">Ліки: <span th:text="${prescription.medication}"></span></p>
+                    <p class="card-text">Доза: <span th:text="${prescription.dosage}"></span></p>
+                    <p class="card-text">Інструкції: <span th:text="${prescription.instructions}"></span></p>
+                </div>
+            </div>
+        </div>
+    </th:block>
+    <!-- Повідомлення, якщо немає рецептів -->
+    <th:block th:unless="${prescriptions.size() > 0}">
+        <p>На жаль, у вас немає рецептів.</p>
+    </th:block>
+</div>
 
 
 

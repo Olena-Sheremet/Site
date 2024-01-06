@@ -24,7 +24,7 @@ public class PrescriptionService {
         return prescriptionRepository.findAll();
     }
 
-    public List<Prescription> findByPatient(Patient patient) {
+    public List<Prescription> getByPatient(Patient patient) {
         return prescriptionRepository.findByPatient(patient);
     }
     public void addPrescription (Prescription prescription){

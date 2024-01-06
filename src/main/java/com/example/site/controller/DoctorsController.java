@@ -173,7 +173,7 @@ public class DoctorsController {
 
                     List<Prescription> prescriptions = new ArrayList<>();
                     for (AppointmentSchedule appointment : appointmentSchedules) {
-                        prescriptions.addAll(prescriptionService.findByPatient(appointment.getPatient()));
+                        prescriptions.addAll(prescriptionService.getByPatient(appointment.getPatient()));
                     }
 
                     // Додавання атрибутів до моделі
