@@ -8,5 +8,7 @@ public interface DoctorScheduleRepository extends JpaRepository<DoctorSchedule, 
 
     List<DoctorSchedule> findByDoctor(Doctor doctor);
 
+    List<DoctorSchedule> findByDoctor_DoctorId(int doctorId);
 }
+
 

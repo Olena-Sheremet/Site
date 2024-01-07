@@ -67,11 +67,11 @@ public class DoctorSchedule {
         this.startTime = startTime;
     }
 
-    public java.sql.Time getEndTime() {
+    public Time getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(java.sql.Time endTime) {
+    public void setEndTime(Time endTime) {
         this.endTime = endTime;
     }
 

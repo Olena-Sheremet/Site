@@ -127,40 +127,6 @@
             </table>
         </div>
     </div>
-    <!-- Блок графіку роботи-->
-    <div id="schedule" class="row">
-        <div class="col-md-6">
-            <h2>Графік роботи</h2>
-            <form th:action="@{/doctors/saveSchedule}" th:object="${editedSchedule}" method="post" id="scheduleForm">
-                <table class="table" id="scheduleTable">
-                    <thead>
-                    <tr>
-                        <th>День тижня</th>
-                        <th>Початок робочого часу</th>
-                        <th>Кінець робочого часу</th>
-                        <th></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <!-- Використовуйте Thymeleaf для ітерації по графіку роботи лікаря -->
-                    <tr th:each="schedule, status : ${doctorSchedules}">
-                        <td>
-                            <!-- Перевірка на null перед використанням equals() -->
-                            <span th:if="${schedule.dayOfWeek != null}" th:text="${schedule.dayOfWeek}"></span>
-                        </td>
-                        <td><input type="time" class="form-control" th:value="${#dates.format(schedule.startTime, 'HH:mm')}" th:name="doctorSchedules[__${status.index}__].startTime" required></td>
-                        <td><input type="time" class="form-control" th:value="${#dates.format(schedule.endTime, 'HH:mm')}" th:name="doctorSchedules[__${status.index}__].endTime" required></td>
-                        <td><button type="button" class="btn btn-danger" onclick="removeScheduleRow(this, '${schedule.id}')">Видалити</button></td>
-                    </tr>
-                    </tbody>
-                </table>
-
-                <button type="button" class="btn btn-primary" onclick="addScheduleRow()">Додати рядок</button>
-                <button type="submit" class="btn btn-success">Зберегти зміни</button>
-            </form>
-        </div>
-    </div>
-</div>
 
 
 <!-- Підключення Bootstrap JS та Popper.js -->

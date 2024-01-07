@@ -220,41 +220,7 @@ public class DoctorsController {
             return "error";
         }
     }
-    @GetMapping("/editSchedule/{doctorId}")
-    public String editDoctorSchedule(@PathVariable("doctorId") Doctor doctorId, Model model) {
-        // Отримання графіку роботи лікаря за його ідентифікатором
-        List<DoctorSchedule> doctorSchedules = doctorScheduleService.getDoctorSchedulesByDoctor(doctorId);
 
-        // Сортування графіку роботи за днями тижня
-        doctorSchedules.sort(Comparator.comparing(DoctorSchedule::getDayOfWeek));
-
-        // Передача відсортованого списку до моделі
-        model.addAttribute("doctorSchedules", doctorSchedules);
-
-
-        return "redirect:/doctorMain";
-    }
-    @GetMapping("/edit/{scheduleId}")
-    public String getEditScheduleForm(@PathVariable int scheduleId, Model model) {
-        // Отримати розклад по його ідентифікатору та передати в модель
-        DoctorSchedule editedSchedule = doctorScheduleService.getDoctorScheduleById(scheduleId).orElse(new DoctorSchedule());
-        model.addAttribute("editedSchedule", editedSchedule);
-
-
-        return "doctorMain.html";
-    }
-
-
-    @PostMapping("/deleteSchedule/{id}")
-    public ResponseEntity<String> deleteDoctorSchedule(@PathVariable int id) {
-        try {
-            doctorScheduleService.deleteDoctorScheduleById(id);
-            return ResponseEntity.ok("Розклад видалено успішно");
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Помилка при видаленні розкладу: " + e.getMessage());
-        }
-    }
     @PostMapping("/saveSchedule")// Збереження розкладу лікаря
     public String saveDoctorSchedule(@ModelAttribute DoctorSchedule editedSchedule, Model model, HttpSession session) {
         try {

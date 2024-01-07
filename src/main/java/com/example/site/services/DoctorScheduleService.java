@@ -20,6 +20,9 @@ public class DoctorScheduleService {
     public List<DoctorSchedule> getDoctorSchedulesByDoctor(Doctor doctor) {
         return doctorScheduleRepository.findByDoctor(doctor);
     }
+    public List<DoctorSchedule> getDoctorSchedulesByDoctorId(int doctorId) {
+        return doctorScheduleRepository.findByDoctor_DoctorId(doctorId);
+    }
 
     public Optional<DoctorSchedule> getDoctorScheduleById(int scheduleId) {
         return doctorScheduleRepository.findById(scheduleId);
@@ -27,7 +30,6 @@ public class DoctorScheduleService {
     public List<DoctorSchedule> getAllDoctorSchedules() {
         return doctorScheduleRepository.findAll();
     }
-
 
     public void saveDoctorSchedule(DoctorSchedule doctorSchedule) {
         doctorScheduleRepository.save(doctorSchedule);
