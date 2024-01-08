@@ -127,7 +127,39 @@
             </table>
         </div>
     </div>
+    <!-- Відображення та редагування графіку роботи -->
+    <div id="schedule" class="row">
+        <div class="col-md-6">
+            <h2>Графік роботи</h2>
+            <form id="scheduleForm">
+                <table id="scheduleTable" class="table">
+                    <thead>
+                    <tr>
+                        <th>День тижня</th>
+                        <th>Початок роботи</th>
+                        <th>Закінчення роботи</th>
+                        <th>Дії</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- Використовуйте Thymeleaf для ітерації по графіку роботи -->
+                    <tr th:each="schedule, status : ${doctorSchedules}">
+                        <td th:text="${schedule.dayOfWeek}"></td>
+                        <td th:text="${#dates.format(schedule.startTime, 'HH:mm')}"></td>
+                        <td th:text="${#dates.format(schedule.endTime, 'HH:mm')}"></td>
+                        <td>
+                            <button type="button" class="btn btn-danger" onclick="removeScheduleRow(this, ${schedule.scheduleId})">Видалити</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <button type="button" class="btn btn-primary" onclick="addScheduleRow()">Додати графік</button>
+                <button type="button" class="btn btn-success" onclick="saveChanges()">Зберегти зміни</button>
+            </form>
+        </div>
+    </div>
 </div>
+
 
 <!-- Підключення Bootstrap JS та Popper.js -->
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
@@ -155,7 +187,7 @@
         if (scheduleId) {
             // Викликати функцію для видалення розкладу з бази даних за його ідентифікатором
             $.ajax({
-                type: 'POST', // або 'GET', залежно від вашої конфігурації
+                type: 'POST',
                 url: '/doctors/deleteSchedule/' + scheduleId,
                 success: function(response) {
                     console.log('Розклад видалено успішно');
@@ -171,7 +203,8 @@
             $(button).closest('tr').remove();
         }
     }
-   function saveChanges() {
+
+    function saveChanges() {
         // Отримати дані з форми
         var formData = $('#scheduleForm').serialize();
 
