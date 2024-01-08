@@ -98,35 +98,6 @@
             </form>
         </div>
     </div>
-    <!-- Відображення  інформації про пацієнтів  -->
-    <div id="patientsSection" class="row">
-        <div class="col-md-6">
-            <h2>Мої пацієнти</h2>
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>Ім'я</th>
-                    <th>Прізвище</th>
-                    <th>Дата народження</th>
-                    <th>Контактний номер</th>
-                    <th>Email</th>
-                    <th>Адреса</th>
-                </tr>
-                </thead>
-                <tbody>
-                <!-- Використовуйте Thymeleaf для ітерації по списку пацієнтів -->
-                <tr th:each="appointmentSchedule, status : ${appointmentSchedules}" th:if="${status.index < 5}">
-                    <td th:text="${appointmentSchedule.patient.firstName}"></td>
-                    <td th:text="${appointmentSchedule.patient.lastName}"></td>
-                    <td th:text="${#dates.format(appointmentSchedule.patient.patientDateOfBirth, 'yyyy-MM-dd')}"></td>
-                    <td th:text="${appointmentSchedule.patient.contactNumber}"></td>
-                    <td th:text="${appointmentSchedule.patient.email}"></td>
-                    <td th:text="${appointmentSchedule.patient.contactAddress}"></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
     <!-- Відображення та редагування графіку роботи -->
     <div id="schedule" class="row">
         <div class="col-md-6">
@@ -148,7 +119,7 @@
                         <td th:text="${#dates.format(schedule.startTime, 'HH:mm')}"></td>
                         <td th:text="${#dates.format(schedule.endTime, 'HH:mm')}"></td>
                         <td>
-                            <button type="button" class="btn btn-danger" onclick="removeScheduleRow(this, ${schedule.scheduleId})">Видалити</button>
+                            <button type="button" class="btn btn-danger" th:attr="data-schedule-id=${schedule.scheduleId}" onclick="removeScheduleRow(this)">Видалити</button>
                         </td>
                     </tr>
                     </tbody>
@@ -158,6 +129,7 @@
             </form>
         </div>
     </div>
+
 </div>
 
 
@@ -183,49 +155,48 @@
         $('#scheduleTable tbody').append(newRow);
     }
 
-    function removeScheduleRow(button, scheduleId) {
-        if (scheduleId) {
-            // Викликати функцію для видалення розкладу з бази даних за його ідентифікатором
-            $.ajax({
-                type: 'POST',
-                url: '/doctors/deleteSchedule/' + scheduleId,
-                success: function(response) {
-                    console.log('Розклад видалено успішно');
-                    // Видалити рядок після успішного видалення розкладу
-                    $(button).closest('tr').remove();
-                },
-                error: function(error) {
-                    console.error('Помилка при видаленні розкладу:', error);
-                }
-            });
-        } else {
-            // Якщо ідентифікатор розкладу відсутній, просто видалити рядок
-            $(button).closest('tr').remove();
-        }
-    }
+   function removeScheduleRow(button) {
+    var scheduleId = $(button).data('schedule-id');
 
-    function saveChanges() {
-        // Отримати дані з форми
-        var formData = $('#scheduleForm').serialize();
-
-        // Виконати AJAX-запит для відправки даних на сервер
+    if (scheduleId) {
+        // Викликати функцію для видалення розкладу з бази даних за його ідентифікатором
         $.ajax({
             type: 'POST',
-            url: '/doctors/saveSchedule',
-            data: formData,
+            url: '/doctors/deleteSchedule/' + scheduleId,
             success: function(response) {
-                // Обробка успішного відгуку від сервера, якщо потрібно
-                console.log('Зміни збережено успішно');
-                // Після збереження можна оновити або перезавантажити сторінку
-                // Наприклад, location.reload();
+                console.log('Розклад видалено успішно');
+                // Видалити рядок після успішного видалення розкладу
+                $(button).closest('tr').remove();
             },
             error: function(error) {
-                // Обробка помилок, якщо вони виникнуть під час відправлення запиту
-                console.error('Помилка при збереженні змін:', error);
+                console.error('Помилка при видаленні розкладу:', error);
             }
         });
     }
-    /* ]]> */
+}
+
+  function saveChanges() {
+    // Отримати дані з форми
+    var formData = $('#scheduleForm').serialize();
+
+    // Виконати AJAX-запит для відправки даних на сервер
+    $.ajax({
+        type: 'POST',
+        url: '/doctors/saveSchedule',
+        data: formData,
+        success: function(response) {
+            // Обробка успішного відгуку від сервера, якщо потрібно
+            console.log('Зміни збережено успішно');
+            // Після збереження можна оновити або перезавантажити сторінку
+            // Наприклад, location.reload();
+        },
+        error: function(error) {
+            // Обробка помилок, якщо вони виникнуть під час відправлення запиту
+            console.error('Помилка при збереженні змін:', error);
+        }
+    });
+}
+      /* ]]> */
 </script>
 
 </body>

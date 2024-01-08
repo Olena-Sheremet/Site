@@ -244,5 +244,16 @@ public class DoctorsController {
         session.invalidate(); // Завершення сесії
         return "redirect:/auth/login"; // Перенаправлення на сторінку входу
     }
+    @PostMapping("/deleteSchedule/{id}")
+    public ResponseEntity<String> deleteDoctorSchedule(@PathVariable int id) {
+        try {
+            // Логіка видалення графіку роботи за id
+            doctorScheduleService.deleteDoctorScheduleById(id);
+            return new ResponseEntity<>("Розклад видалено успішно", HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("Помилка при видаленні розкладу", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 }
