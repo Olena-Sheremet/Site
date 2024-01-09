@@ -107,7 +107,7 @@ public class PatientController {
         LocalDateTime appointmentDateTimeParsed = LocalDateTime.parse(appointmentDateTime, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm"));
         appointmentSchedule.setAppointmentDate(java.sql.Date.valueOf(appointmentDateTimeParsed.toLocalDate()));
         appointmentSchedule.setAppointmentTime(java.sql.Time.valueOf(appointmentDateTimeParsed.toLocalTime()));
-
+        appointmentSchedule.setStatusSchedule("Scheduled");
         // Збереження запису на прийом
         appointmentScheduleService.saveAppointment(appointmentSchedule);
 
