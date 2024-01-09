@@ -1,6 +1,8 @@
 package com.example.site.services;
 
 import com.example.site.model.Administration;
+import com.example.site.model.Patient;
+import com.example.site.model.User;
 import com.example.site.repository.AdministrationsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,7 @@ public class AdministrationsService {
         return administrationsRepository.findById(id);
     }
 
+
     public List<Administration> getAllAdministrations() {
         return administrationsRepository.findAll();
     }
@@ -35,6 +38,9 @@ public class AdministrationsService {
 
     public void deleteAdministrationById(int id) {
         administrationsRepository.deleteById(id);
+    }
+    public Administration getAdministrationByUser(User user) {
+        return administrationsRepository.findByUser(user);
     }
 }
 
