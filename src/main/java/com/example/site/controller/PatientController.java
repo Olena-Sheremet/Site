@@ -47,6 +47,10 @@ public class PatientController {
         List<Prescription> prescriptions = prescriptionService.getByPatient(patient);
         model.addAttribute("prescriptions", prescriptions);
 
+        // Отримуємо дані про лікарів для відображення їх в інформації про прийоми
+        List<Doctor> doctors = doctorsService.getAllDoctors();
+        model.addAttribute("doctors", doctors);
+
         // Додаємо об'єкт пацієнта до моделі
         model.addAttribute("patient", patient);
 
