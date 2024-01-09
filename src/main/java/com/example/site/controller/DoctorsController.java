@@ -268,7 +268,7 @@ public class DoctorsController {
 
             doctorScheduleService.saveDoctorSchedule(editedSchedule);
 
-            return "redirect:/doctors/main?success=true";
+            return "/doctors/main?success=true";
         } catch (Exception e) {
             e.printStackTrace();
             model.addAttribute("error", "Виникла помилка під час збереження графіку роботи.");
