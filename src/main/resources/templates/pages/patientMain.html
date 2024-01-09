@@ -93,86 +93,9 @@
         <button type="submit" class="btn btn-primary">Зберегти зміни</button>
     </form>
 </div>
-<!-- Блок відображення записів на прийом -->
-<div id="scheduledAppointments" class="container mb-4">
-    <h2>Мій графік</h2>
-    <!-- Перевірка чи є записи на прийом -->
-    <th:block th:if="${scheduledAppointments.size() > 0}">
-        <table class="table table-bordered">
-            <thead>
-            <tr>
-                <th>Дата</th>
-                <th>Час</th>
-                <th>Статус</th>
-                <th>Лікар</th>
-            </tr>
-            </thead>
-            <tbody>
-            <!-- Перебір записів на прийом та їх відображення -->
-            <tr th:each="appointment : ${scheduledAppointments}">
-                <td th:text="${#dates.format(appointment.appointmentDate, 'dd-MM-yyyy')}"></td>
-                <td th:text="${#dates.format(appointment.appointmentTime, 'HH:mm')}"></td>
-                <td th:text="${appointment.statusSchedule}"></td>
-                <td th:text="${appointment.doctor.lastName + ' ' + appointment.doctor.firstName + ' (' + appointment.doctor.specialty + ')'}"></td>
-            </tr>
-            </tbody>
-        </table>
-    </th:block>
-    <!-- Відображення повідомлення, якщо немає записів -->
-    <th:block th:unless="${scheduledAppointments.size() > 0}">
-        <p>На жаль, немає записів на прийом.</p>
-    </th:block>
-</div>
 
-<!--Блок запису на прийом-->
-<div id="appointments" class="container mb-4">
-    <h2>Записатися на прийом</h2>
-    <form th:action="@{/patients/bookAppointment}" method="post">
-        <!-- Вибір лікаря -->
-        <div class="mb-3">
-            <label for="doctorId" class="form-label">Виберіть лікаря</label>
-            <select class="form-control" id="doctorId" name="doctorId">
-                <!-- Виведення імені та прізвища лікарів та їх спеціальності -->
-                <option th:each="doctor : ${doctors}" th:value="${doctor.doctorId}">
-                    <!-- Виведення інформації про лікаря -->
-                    <span th:text="${doctor.lastName + ' ' + doctor.firstName + ' - ' + doctor.specialty}"></span>
-                </option>
-            </select>
-        </div>
-        <!-- Вибір дати та часу прийому -->
-        <div class="mb-3">
-            <label for="appointmentDateTime" class="form-label">Оберіть дату та час прийому</label>
-            <input type="datetime-local" class="form-control" id="appointmentDateTime" name="appointmentDateTime" required />
-        </div>
-        <!-- Кнопка для збереження запису на прийом -->
-        <button type="submit" class="btn btn-primary">Записатися на прийом</button>
-    </form>
-</div>
-<!-- Блок відображення рецептів -->
-<div id="prescriptions" class="container mb-4">
-    <h2>Мої Рецепти</h2>
-    <!-- Перевірка, чи є рецепти -->
-    <th:block th:if="${prescriptions.size() > 0}">
-        <!-- Цикл для відображення рецептів -->
-        <div th:each="prescription : ${prescriptions}">
-            <div class="card mb-3">
-                <div class="card-body">
-                    <!-- Інформація про рецепт -->
-                    <h5 class="card-title">Рецепт </h5>
-                    <p class="card-text">Дата назначення: <span th:text="${prescription.prescriptionDate}"></span></p>
-                    <p class="card-text">Лікар: <span th:text="${prescription.doctor.firstName + ' ' + prescription.doctor.lastName + ', ' + prescription.doctor.specialty}"></span></p>
-                    <p class="card-text">Ліки: <span th:text="${prescription.medication}"></span></p>
-                    <p class="card-text">Доза: <span th:text="${prescription.dosage}"></span></p>
-                    <p class="card-text">Інструкції: <span th:text="${prescription.instructions}"></span></p>
-                </div>
-            </div>
-        </div>
-    </th:block>
-    <!-- Повідомлення, якщо немає рецептів -->
-    <th:block th:unless="${prescriptions.size() > 0}">
-        <p>На жаль, у вас немає рецептів.</p>
-    </th:block>
-</div>
+
+
 
 
 

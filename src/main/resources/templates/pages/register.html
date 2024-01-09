@@ -58,19 +58,19 @@
 
         <div id="doctorFields" class="mb-3" style="display: none;">
             <label for="firstName" class="form-label">Doctor First Name</label>
-            <input type="text" class="form-control" id="firstName" name="firstName" required>
+            <input type="text" class="form-control" id="firstName" name="firstName">
 
             <label for="lastName" class="form-label">Doctor Last Name</label>
-            <input type="text" class="form-control" id="lastName" name="lastName" required>
+            <input type="text" class="form-control" id="lastName" name="lastName">
 
             <label for="specialty" class="form-label">Doctor Specialty</label>
-            <input type="text" class="form-control" id="specialty" name="specialty" required>
+            <input type="text" class="form-control" id="specialty" name="specialty">
 
             <label for="contactNumber" class="form-label">Doctor Contact Number</label>
-            <input type="text" class="form-control" id="contactNumber" name="contactNumber" required>
+            <input type="text" class="form-control" id="contactNumber" name="contactNumber">
 
             <label for="doctorHireDate" class="form-label">Doctor Hire Date</label>
-            <input type="date" class="form-control" id="doctorHireDate" th:field="*{doctorModel.doctorHireDate}" name="doctorHireDate" required>
+            <input type="date" class="form-control" id="doctorHireDate" th:field="*{doctorModel.doctorHireDate}" name="doctorHireDate">
 
             <label for="salary" class="form-label">Doctor Salary(грн)</label>
             <input type="text" class="form-control" id="salary" name="salary">
@@ -79,19 +79,19 @@
         <!-- блок для введення даних адміністратора -->
         <div id="administratorFields" class="mb-3" style="display: none;">
             <label for="adminFirstName" class="form-label">Administrator First Name</label>
-            <input type="text" class="form-control" id="adminFirstName" name="firstName" required>
+            <input type="text" class="form-control" id="adminFirstName" name="firstName">
 
             <label for="adminLastName" class="form-label">Administrator Last Name</label>
-            <input type="text" class="form-control" id="adminLastName" name="lastName" required>
+            <input type="text" class="form-control" id="adminLastName" name="lastName">
 
             <label for="adminContactNumber" class="form-label">Administrator Contact Number</label>
-            <input type="text" class="form-control" id="adminContactNumber" name="contactNumber" required>
+            <input type="text" class="form-control" id="adminContactNumber" name="contactNumber">
 
             <label for="adminEmail" class="form-label">Administrator Email</label>
-            <input type="email" class="form-control" id="adminEmail" name="email" required>
+            <input type="email" class="form-control" id="adminEmail" name="email">
 
-            <label for="adminHireDate" class="form-label">Administrator Hire Date</label>
-            <input type="date" class="form-control" id="adminHireDate" th:field="*{administratorModel.adminHireDate}" name="adminHireDate" required>
+            <label for="adminHireDate" class="form-label">Doctor Hire Date</label>
+            <input type="date" class="form-control" id="adminHireDate" th:field="*{administratorModel.adminHireDate}" name="adminHireDate">
 
             <label for="adminSalary" class="form-label">Administrator Salary</label>
             <input type="text" class="form-control" id="adminSalary" name="salary">
@@ -99,13 +99,13 @@
         <!-- блок для введення даних пацієнта -->
         <div id="patientFields" class="mb-3" style="display: none;">
             <label for="patientFirstName" class="form-label">Patient First Name</label>
-            <input type="text" class="form-control" id="patientFirstName" name="firstName" required>
+            <input type="text" class="form-control" id="patientFirstName" name="firstName">
 
             <label for="patientLastName" class="form-label">Patient Last Name</label>
-            <input type="text" class="form-control" id="patientLastName" name="lastName" required>
+            <input type="text" class="form-control" id="patientLastName" name="lastName">
 
             <label for="patientDateOfBirth" class="form-label">Patient Date of Birth(year-month-day)</label>
-            <input type="date" class="form-control" id="patientDateOfBirth" th:field="*{patientModel.patientDateOfBirth}" name="patientDateOfBirth" required>
+            <input type="date" class="form-control" id="patientDateOfBirth" th:field="*{patientModel.patientDateOfBirth}" name="patientDateOfBirth">
 
             <label for="gender" class="form-label">Patient Gender</label>
             <select class="form-select" id="gender" name="gender" required>
@@ -117,7 +117,7 @@
             <input type="text" class="form-control" id="patientContactNumber" name="contactNumber">
 
             <label for="patientEmail" class="form-label">Patient Email</label>
-            <input type="email" class="form-control" id="patientEmail" name="email" required>
+            <input type="email" class="form-control" id="patientEmail" name="email">
 
             <label for="contactAddress" class="form-label">Patient Contact Address</label>
             <textarea class="form-control" id="contactAddress" name="contactAddress"></textarea>
