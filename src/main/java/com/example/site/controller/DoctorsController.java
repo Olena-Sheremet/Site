@@ -280,4 +280,10 @@ public class DoctorsController {
         }
     }
 
+    @GetMapping("/searchPatients")
+    public ResponseEntity<List<Patient>> searchPatients(@RequestParam String keyword) {
+        List<Patient> patients = patientsService.searchPatients(keyword);
+        return new ResponseEntity<>(patients, HttpStatus.OK);
+    }
+
 }

@@ -37,6 +37,23 @@
                         <a class="nav-link" href="#schedule">Графік роботи</a>
                     </li>
                     <li class="nav-item">
+                        <!-- Пошук пацієнтів -->
+                        <div id="search" class="row">
+                            <!-- Форма для пошуку пацієнтів -->
+                            <form id="searchPatientsForm">
+                                <input type="text" id="searchInput" name="searchInput" placeholder="Введіть ім'я або прізвище пацієнта">
+                                <button type="button" onclick="searchPatients()">Пошук</button>
+                            </form>
+                            <!-- Модальне вікно для відображення інформації про пацієнта -->
+                            <div id="patientModal" class="modal">
+                                <div class="modal-content">
+                                    <span class="close" onclick="closeModal()">&times;</span>
+                                    <div id="patientInfo"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="/doctors/logout">Вийти</a>
                     </li>
                     <!-- Додайте інші посилання за потреби -->
@@ -84,15 +101,15 @@
                     <label for="salary" class="form-label">Заробітна плата</label>
                     <input type="text" class="form-control" id="salary" th:value="${currentDoctor.salary}" th:field="*{salary}">
                 </div>
-<!--
-                <div class="mb-3">
-                    <label for="department" class="form-label">Відділення</label>
-                    <select class="form-select" id="department" name="department.id">
-                        <option value="" th:selected="${currentDoctor?.department == null}">Відсутнє відділення</option>
-                        <option th:each="dept : ${departments}" th:value="${dept.departmentId}" th:text="${dept.departmentName}" th:selected="${currentDoctor?.department?.departmentId == dept.departmentId}"></option>
-                    </select>
-                </div>
--->
+                <!--
+                                <div class="mb-3">
+                                    <label for="department" class="form-label">Відділення</label>
+                                    <select class="form-select" id="department" name="department.id">
+                                        <option value="" th:selected="${currentDoctor?.department == null}">Відсутнє відділення</option>
+                                        <option th:each="dept : ${departments}" th:value="${dept.departmentId}" th:text="${dept.departmentName}" th:selected="${currentDoctor?.department?.departmentId == dept.departmentId}"></option>
+                                    </select>
+                                </div>
+                -->
                 <button type="submit" class="btn btn-primary">Зберегти зміни</button>
 
             </form>
@@ -158,6 +175,10 @@
             </form>
         </div>
     </div>
+
+
+
+
 
 </div>
 
@@ -226,6 +247,64 @@
         }
     });
 }
+
+function searchPatients() {
+        var searchInput = document.getElementById("searchInput").value;
+
+        // AJAX-запит для пошуку пацієнтів
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "/doctors/searchPatients?keyword=" + searchInput, true);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                var patients = JSON.parse(xhr.responseText);
+                displayPatients(patients);
+            }
+        };
+        xhr.send();
+    }
+
+    function displayPatients(patients) {
+        var modal = document.getElementById("patientModal");
+        var patientInfo = document.getElementById("patientInfo");
+
+        // Очищення попередніх даних
+        patientInfo.innerHTML = "";
+
+        if (patients.length > 0) {
+            // Побудова інформації про кожного пацієнта
+            patients.forEach(function (patient) {
+                var patientDetails = document.createElement("div");
+                patientDetails.innerHTML =
+                    "<strong>ID:</strong> " + patient.patientId +
+                    "<br><strong>Ім'я:</strong> " + patient.firstName +
+                    "<br><strong>Прізвище:</strong> " + patient.lastName +
+                    "<br><strong>Дата народження:</strong> " + patient.patientDateOfBirth +
+                    "<br><strong>Стать:</strong> " + patient.gender +
+                    "<br><strong>Контактний номер:</strong> " + patient.contactNumber +
+                    "<br><strong>Email:</strong> " + patient.email +
+                    "<br><strong>Адреса:</strong> " + patient.contactAddress +
+                    "<br>--------------------------------------<br>";
+
+                patientInfo.appendChild(patientDetails);
+            });
+
+            // Відображення модального вікна
+            modal.style.display = "block";
+        } else {
+            // Виведення повідомлення про відсутність результатів
+            patientInfo.innerHTML = "<p>Пацієнтів не знайдено.</p>";
+
+            // Показ модального вікна з повідомленням
+            modal.style.display = "block";
+        }
+    }
+
+    function closeModal() {
+        var modal = document.getElementById("patientModal");
+        modal.style.display = "none";
+    }
+
+
       /* ]]> */
 </script>
 

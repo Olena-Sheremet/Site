@@ -11,5 +11,6 @@ import java.util.List;
 public interface PatientsRepository extends JpaRepository<Patient, Integer> {
     Patient findByUser(User user);
 
+    List<Patient> findByFirstNameIgnoreCaseContainingOrLastNameIgnoreCaseContaining(String firstName, String lastName);
 
 }

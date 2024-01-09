@@ -39,4 +39,8 @@ public class PatientsService {
     public Optional<Patient> getPatientById(int id) {
         return patientsRepository.findById(id);
     }
+
+    public List<Patient> searchPatients(String keyword) {
+        return patientsRepository.findByFirstNameIgnoreCaseContainingOrLastNameIgnoreCaseContaining(keyword, keyword);
+    }
 }
