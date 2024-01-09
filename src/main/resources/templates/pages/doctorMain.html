@@ -189,21 +189,21 @@
 <script th:inline="javascript">
     /* <![CDATA[ */
     function addScheduleRow() {
-        var newRow = '<tr>' +
-            '<td><select class="form-select" name="newDayOfWeek" required>' +
-            '<option value="Monday">Понеділок</option>' +
-            '<option value="Tuesday">Вівторок</option>' +
-            '<option value="Wednesday">Середа</option>' +
-            '<option value="Thursday">Четвер</option>' +
-            '<option value="Friday">П\'ятниця</option>' +
-            '</select></td>' +
-            '<td><input type="time" class="form-control" name="newStartTime" required></td>' +
-            '<td><input type="time" class="form-control" name="newEndTime" required></td>' +
-            '<td><button type="button" class="btn btn-danger" onclick="removeScheduleRow(this)">Видалити</button></td>' +
-            '</tr>';
+    var newRow = '<tr>' +
+        '<td><select class="form-select" name="dayOfWeek" required>' +
+        '<option value="Monday">Понеділок</option>' +
+        '<option value="Tuesday">Вівторок</option>' +
+        '<option value="Wednesday">Середа</option>' +
+        '<option value="Thursday">Четвер</option>' +
+        '<option value="Friday">П\'ятниця</option>' +
+        '</select></td>' +
+        '<td><input type="time" class="form-control" name="startTime" required></td>' +
+        '<td><input type="time" class="form-control" name="endTime" required></td>' +
+        '<td><button type="button" class="btn btn-danger" onclick="removeScheduleRow(this)">Видалити</button></td>' +
+        '</tr>';
 
-        $('#scheduleTable tbody').append(newRow);
-    }
+    $('#scheduleTable tbody').append(newRow);
+}
 
    function removeScheduleRow(button) {
     var scheduleId = $(button).data('schedule-id');

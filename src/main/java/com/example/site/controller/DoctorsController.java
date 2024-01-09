@@ -2,6 +2,7 @@ package com.example.site.controller;
 
 import com.example.site.model.*;
 import com.example.site.services.*;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -246,17 +248,27 @@ public class DoctorsController {
 
 
     @PostMapping("/saveSchedule")// Збереження розкладу лікаря
-    public String saveDoctorSchedule(@ModelAttribute DoctorSchedule editedSchedule, Model model, HttpSession session) {
+    public String saveDoctorSchedule(HttpServletRequest request, Model model, HttpSession session) {
         try {
             int doctorId = (Integer) session.getAttribute("doctorId");
             Doctor doctor = new Doctor();
             doctor.setDoctorId(doctorId);
-            editedSchedule.setDoctor(doctor);
 
-            // Зберегти або оновити розклад в базі даних
+            // Отримання даних з форми
+            String dayOfWeek = request.getParameter("dayOfWeek");
+            Time startTime = Time.valueOf(request.getParameter("startTime") + ":00");
+            Time endTime = Time.valueOf(request.getParameter("endTime") + ":00");
+
+            // Створення об'єкта DoctorSchedule і збереження в базі даних
+            DoctorSchedule editedSchedule = new DoctorSchedule();
+            editedSchedule.setDoctor(doctor);
+            editedSchedule.setDayOfWeek(dayOfWeek);
+            editedSchedule.setStartTime(startTime);
+            editedSchedule.setEndTime(endTime);
+
             doctorScheduleService.saveDoctorSchedule(editedSchedule);
 
-            return "redirect:/doctors/main";
+            return "redirect:/doctors/main?success=true";
         } catch (Exception e) {
             e.printStackTrace();
             model.addAttribute("error", "Виникла помилка під час збереження графіку роботи.");
