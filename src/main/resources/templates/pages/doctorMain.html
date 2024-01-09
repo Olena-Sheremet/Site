@@ -98,6 +98,35 @@
             </form>
         </div>
     </div>
+    <!-- Відображення  інформації про пацієнтів  -->
+    <div id="patientsSection" class="row">
+        <div class="col-md-6">
+            <h2>Мої пацієнти</h2>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Ім'я</th>
+                    <th>Прізвище</th>
+                    <th>Дата народження</th>
+                    <th>Контактний номер</th>
+                    <th>Email</th>
+                    <th>Адреса</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Використовуйте Thymeleaf для ітерації по списку пацієнтів -->
+                <tr th:each="appointmentSchedule, status : ${appointmentSchedules}" th:if="${status.index < 5}">
+                    <td th:text="${appointmentSchedule.patient.firstName}"></td>
+                    <td th:text="${appointmentSchedule.patient.lastName}"></td>
+                    <td th:text="${#dates.format(appointmentSchedule.patient.patientDateOfBirth, 'yyyy-MM-dd')}"></td>
+                    <td th:text="${appointmentSchedule.patient.contactNumber}"></td>
+                    <td th:text="${appointmentSchedule.patient.email}"></td>
+                    <td th:text="${appointmentSchedule.patient.contactAddress}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
     <!-- Відображення та редагування графіку роботи -->
     <div id="schedule" class="row">
         <div class="col-md-6">
