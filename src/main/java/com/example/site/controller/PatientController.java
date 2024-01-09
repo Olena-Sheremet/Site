@@ -8,6 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Controller
@@ -18,29 +20,38 @@ public class PatientController {
     private final AppointmentScheduleService appointmentScheduleService;
     private final DoctorsService doctorsService;
     private DoctorScheduleService doctorScheduleService;
+    private final PrescriptionService prescriptionService;
 
     @Autowired
-    public PatientController(PatientsService patientService, AppointmentScheduleService appointmentScheduleService, DoctorsService doctorsService, DoctorScheduleService doctorScheduleService) {
+    public PatientController(PatientsService patientService, AppointmentScheduleService appointmentScheduleService, DoctorsService doctorsService, DoctorScheduleService doctorScheduleService, PrescriptionService prescriptionService) {
         this.patientService = patientService;
         this.appointmentScheduleService = appointmentScheduleService;
         this.doctorsService = doctorsService;
         this.doctorScheduleService = doctorScheduleService;
+        this.prescriptionService = prescriptionService;
     }
 
 
     @GetMapping("/main")
     public String showMainPage(HttpSession session, Model model) {
-
         // Отримуємо користувача з сесії
         User user = (User) session.getAttribute("user");
         // Отримуємо пацієнта за користувачем
         Patient patient = patientService.getPatientByUser(user);
 
+        // Отримуємо заплановані прийоми для пацієнта
+        List<AppointmentSchedule> scheduledAppointments = appointmentScheduleService.getScheduledAppointmentsForPatient(patient);
+        model.addAttribute("scheduledAppointments", scheduledAppointments);
+
+        // Отримуємо рецепти для пацієнта
+        List<Prescription> prescriptions = prescriptionService.getByPatient(patient);
+        model.addAttribute("prescriptions", prescriptions);
+
         // Додаємо об'єкт пацієнта до моделі
         model.addAttribute("patient", patient);
+
         return "pages/patientMain";
     }
-
 
     @PostMapping("/updatePersonalInfo")
     public String updatePersonalInfo(Patient updatedPatient, HttpSession session) {
@@ -70,6 +81,35 @@ public class PatientController {
             return "redirect:/createPatient";  // Припустима сторінка для створення пацієнта
         }
     }
+    @PostMapping("/bookAppointment")
+    public String bookAppointment(@RequestParam int doctorId, @RequestParam String appointmentDateTime, HttpSession session) {
+        // Отримуємо користувача з сесії
+        User user = (User) session.getAttribute("user");
+
+        // Отримуємо пацієнта за користувачем
+        Patient patient = patientService.getPatientByUser(user);
+
+        // Отримуємо об'єкт лікаря за його ідентифікатором
+        Doctor doctor = doctorsService.getDoctorById(doctorId).orElseThrow(() -> new RuntimeException("Лікар не знайдений"));
+
+        // Тут ви можете додати логіку для перевірки доступності дати та часу прийому лікаря
+
+        // Створення об'єкту запису на прийом
+        AppointmentSchedule appointmentSchedule = new AppointmentSchedule();
+        appointmentSchedule.setPatient(patient);
+        appointmentSchedule.setDoctor(doctor);
+
+        // Парсинг та встановлення дати та часу прийому
+        LocalDateTime appointmentDateTimeParsed = LocalDateTime.parse(appointmentDateTime, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm"));
+        appointmentSchedule.setAppointmentDate(java.sql.Date.valueOf(appointmentDateTimeParsed.toLocalDate()));
+        appointmentSchedule.setAppointmentTime(java.sql.Time.valueOf(appointmentDateTimeParsed.toLocalTime()));
+
+        // Збереження запису на прийом
+        appointmentScheduleService.saveAppointment(appointmentSchedule);
+
+        return "redirect:/patients/main";
+    }
+
     @GetMapping("/appointments")
     public String showScheduledAppointments(Model model, HttpSession session) {
         // Отримуємо користувача з сесії
@@ -90,6 +130,23 @@ public class PatientController {
 
         return "pages/patientMain";
     }
+    @GetMapping("/prescriptions")
+    public String showPrescriptions(Model model, HttpSession session) {
+        // Отримуємо користувача з сесії
+        User user = (User) session.getAttribute("user");
+
+        // Отримуємо пацієнта за користувачем
+        Patient patient = patientService.getPatientByUser(user);
+
+        // Отримуємо рецепти для пацієнта
+        List<Prescription> prescriptions = prescriptionService.getByPatient(patient);
+
+        // Додаємо список рецептів до моделі
+        model.addAttribute("prescriptions", prescriptions);
+
+        return "pages/patientMain";
+    }
+
 
     @GetMapping
     public String getAllPatients(Model model) {
