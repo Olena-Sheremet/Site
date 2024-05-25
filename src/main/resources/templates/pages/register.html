@@ -43,6 +43,7 @@
         <div class="mb-3">
             <label for="userPassword" class="form-label">Password</label>
             <input type="password" class="form-control" id="userPassword" name="userPassword" required>
+            <div id="passwordRequirements" style="font-size: 0.8em; color: #6c757d;"></div>
         </div>
 
         <!--  блок для вибору типу користувача -->
@@ -156,6 +157,37 @@
                 document.getElementById('administratorFields').style.display = 'block';
             }
         }
+
+        // Перевірка складності пароля при введенні
+        document.getElementById('userPassword').addEventListener('input', function () {
+            var password = this.value;
+            var requirements = document.getElementById('passwordRequirements');
+            var hasUpperCase = /[A-Z]/.test(password);
+            var hasLowerCase = /[a-z]/.test(password);
+            var hasNumbers = /\d/.test(password);
+            var hasSpecialChars = /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(password);
+            var isLengthyEnough = password.length >= 8;
+
+            var message = "";
+
+            if (!isLengthyEnough) {
+                message += "Пароль повинен містити щонайменше 8 символів. ";
+            }
+            if (!hasUpperCase) {
+                message += "Пароль повинен містити принаймні одну велику літеру. ";
+            }
+            if (!hasLowerCase) {
+                message += "Пароль повинен містити принаймні одну маленьку літеру. ";
+            }
+            if (!hasNumbers) {
+                message += "Пароль повинен містити принаймні одну цифру. ";
+            }
+            if (!hasSpecialChars) {
+                message += "Пароль повинен містити принаймні один спеціальний символ. ";
+            }
+
+            requirements.textContent = message;
+        });
     });
 </script>
 </body>
